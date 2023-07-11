@@ -1,0 +1,448 @@
+Last login: Sat Jul  8 22:05:24 on console
+(base) a_zavershinskiy@MBP--AZavershinskiy ~ % ssh andrey@192.168.64.10
+andrey@192.168.64.10's password: 
+Welcome to Ubuntu 22.04.2 LTS (GNU/Linux 5.19.0-46-generic aarch64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+Last login: Wed May 17 00:28:52 2023 from 192.168.64.1
+
+
+# Task 1
+
+andrey@utm-vm:~$ mkdir GB
+andrey@utm-vm:~$ mkdir GB/bin
+andrey@utm-vm:~$ cp /bin/bash GB/bin/
+andrey@utm-vm:~$ ldd /bin/bash
+	linux-vdso.so.1 (0x0000ffffb9763000)
+	libtinfo.so.6 => /lib/aarch64-linux-gnu/libtinfo.so.6 (0x0000ffffb9560000)
+	libc.so.6 => /lib/aarch64-linux-gnu/libc.so.6 (0x0000ffffb93b0000)
+	/lib/ld-linux-aarch64.so.1 (0x0000ffffb972a000)
+andrey@utm-vm:~$ mkdir GB/lib
+andrey@utm-vm:~$ cp /lib/aarch64-linux-gnu/libtinfo.so.6 GB/lib
+andrey@utm-vm:~$ cp /lib/aarch64-linux-gnu/libc.so.6  GB/lib
+andrey@utm-vm:~$ cp /lib/aarch64-linux-gnu/ld-linux-aarch64.so.1 GB/lib
+andrey@utm-vm:~$ sudo chroot GB
+bash-5.1# 
+bash-5.1# 
+bash-5.1# exit
+exit
+andrey@utm-vm:~$ whereis ls
+ls: /usr/bin/ls /usr/share/man/man1/ls.1.gz
+andrey@utm-vm:~$ mkdir GB/usr
+andrey@utm-vm:~$ cd GB/
+andrey@utm-vm:~/GB$ tree
+.
+├── bin
+│   └── bash
+├── lib
+│   ├── ld-linux-aarch64.so.1
+│   ├── libc.so.6
+│   └── libtinfo.so.6
+└── usr
+
+3 directories, 4 files
+andrey@utm-vm:~/GB$ tree
+.
+├── bin
+│   └── bash
+├── lib
+│   ├── ld-linux-aarch64.so.1
+│   ├── libc.so.6
+│   └── libtinfo.so.6
+└── usr
+    └── bin
+
+4 directories, 4 files
+andrey@utm-vm:~$ cp /usr/bin/ls GB/usr/bin
+andrey@utm-vm:~$ ldd /usr/bin/ls
+	linux-vdso.so.1 (0x0000ffffa4dd9000)
+	libselinux.so.1 => /lib/aarch64-linux-gnu/libselinux.so.1 (0x0000ffffa4d20000)
+	libc.so.6 => /lib/aarch64-linux-gnu/libc.so.6 (0x0000ffffa4b70000)
+	/lib/ld-linux-aarch64.so.1 (0x0000ffffa4da0000)
+	libpcre2-8.so.0 => /lib/aarch64-linux-gnu/libpcre2-8.so.0 (0x0000ffffa4ad0000)
+andrey@utm-vm:~$ cp /lib/aarch64-linux-gnu/libselinux.so.1 ./GB/lib/
+andrey@utm-vm:~$ cp /lib/aarch64-linux-gnu/libc.so.6 ./GB/lib/
+andrey@utm-vm:~$ cp /lib/ld-linux-aarch64.so.1 ./GB/lib/
+andrey@utm-vm:~$ cp /lib/aarch64-linux-gnu/libc.so.6 ./GB/lib/
+\andrey@utm-vm:~$ cp /lib/aarch64-linux-gnu/libpcre2-8.so.0 ./GB/lib/
+andrey@utm-vm:~$ sudo chroot ./GB /bin/bash
+[sudo] password for andrey: 
+bash-5.1# ls -l
+total 12
+drwxrwxr-x 2 1000 1000 4096 Jul 10 13:08 bin
+drwxrwxr-x 2 1000 1000 4096 Jul 11 16:44 lib
+drwxrwxr-x 3 1000 1000 4096 Jul 11 16:17 usr
+bash-5.1# exit
+exit
+andrey@utm-vm:~/GB$ tree
+.
+├── bin
+│   └── bash
+├── lib
+│   ├── ld-linux-aarch64.so.1
+│   ├── libc.so.6
+│   ├── libpcre2-8.so.0
+│   ├── libselinux.so.1
+│   └── libtinfo.so.6
+└── usr
+    └── bin
+        └── ls
+
+4 directories, 7 files
+andrey@utm-vm:~/GB$ 
+
+
+
+# Task 2
+
+andrey@utm-vm:~$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: enp0s1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether d6:31:27:22:f4:dd brd ff:ff:ff:ff:ff:ff
+    inet 192.168.64.10/24 brd 192.168.64.255 scope global dynamic noprefixroute enp0s1
+       valid_lft 74106sec preferred_lft 74106sec
+    inet6 fd80:6dd0:22af:d13a:19f8:137e:e62c:43cb/64 scope global temporary dynamic 
+       valid_lft 549308sec preferred_lft 30860sec
+    inet6 fd80:6dd0:22af:d13a:fb46:bef4:54a0:a2d8/64 scope global dynamic mngtmpaddr noprefixroute 
+       valid_lft 2591929sec preferred_lft 604729sec
+    inet6 fe80::3f2f:717:b9e0:198c/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 02:42:1d:04:6e:2f brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+andrey@utm-vm:~$ ip netns add testns123
+mount --make-shared /run/netns failed: Operation not permitted
+andrey@utm-vm:~$ sudo !!
+sudo ip netns add testns123
+andrey@utm-vm:~$ sudo ip netns list
+testns123
+andrey@utm-vm:~$ sudo ip netns exec testns123 bash
+
+root@utm-vm:/home/andrey# ip a
+1: lo: <LOOPBACK> mtu 65536 qdisc noop state DOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+root@utm-vm:/home/andrey# ip a
+1: lo: <LOOPBACK> mtu 65536 qdisc noop state DOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+4: veth1@if5: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether da:5a:09:14:de:1e brd ff:ff:ff:ff:ff:ff link-netnsid 0
+root@utm-vm:/home/andrey# ip addr add 10.0.0.2/24 dev veth1
+root@utm-vm:/home/andrey# ip a
+1: lo: <LOOPBACK> mtu 65536 qdisc noop state DOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+4: veth1@if5: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether da:5a:09:14:de:1e brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.0.0.2/24 scope global veth1
+       valid_lft forever preferred_lft forever
+root@utm-vm:/home/andrey# ip link set dev veth1 up
+root@utm-vm:/home/andrey# ip a
+1: lo: <LOOPBACK> mtu 65536 qdisc noop state DOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+4: veth1@if5: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether da:5a:09:14:de:1e brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.0.0.2/24 scope global veth1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::d85a:9ff:fe14:de1e/64 scope link 
+       valid_lft forever preferred_lft forever
+root@utm-vm:/home/andrey# ping 10.0.0.1
+PING 10.0.0.1 (10.0.0.1) 56(84) bytes of data.
+64 bytes from 10.0.0.1: icmp_seq=1 ttl=64 time=0.224 ms
+64 bytes from 10.0.0.1: icmp_seq=2 ttl=64 time=0.231 ms
+64 bytes from 10.0.0.1: icmp_seq=3 ttl=64 time=0.234 ms
+^C
+--- 10.0.0.1 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2049ms
+rtt min/avg/max/mdev = 0.224/0.229/0.234/0.004 ms
+root@utm-vm:/home/andrey# 
+
+
+andrey@utm-vm:~$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: enp0s1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether d6:31:27:22:f4:dd brd ff:ff:ff:ff:ff:ff
+    inet 192.168.64.10/24 brd 192.168.64.255 scope global dynamic noprefixroute enp0s1
+       valid_lft 73694sec preferred_lft 73694sec
+    inet6 fd80:6dd0:22af:d13a:19f8:137e:e62c:43cb/64 scope global temporary dynamic 
+       valid_lft 548897sec preferred_lft 30449sec
+    inet6 fd80:6dd0:22af:d13a:fb46:bef4:54a0:a2d8/64 scope global dynamic mngtmpaddr noprefixroute 
+       valid_lft 2591977sec preferred_lft 604777sec
+    inet6 fe80::3f2f:717:b9e0:198c/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 02:42:1d:04:6e:2f brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+andrey@utm-vm:~$ sudo ip link add veth0 type veth peer name veth1
+[sudo] password for andrey: 
+andrey@utm-vm:~$ sudo ip link set veth1 netns testns123
+andrey@utm-vm:~$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: enp0s1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether d6:31:27:22:f4:dd brd ff:ff:ff:ff:ff:ff
+    inet 192.168.64.10/24 brd 192.168.64.255 scope global dynamic noprefixroute enp0s1
+       valid_lft 73312sec preferred_lft 73312sec
+    inet6 fd80:6dd0:22af:d13a:19f8:137e:e62c:43cb/64 scope global temporary dynamic 
+       valid_lft 548514sec preferred_lft 30066sec
+    inet6 fd80:6dd0:22af:d13a:fb46:bef4:54a0:a2d8/64 scope global dynamic mngtmpaddr noprefixroute 
+       valid_lft 2591963sec preferred_lft 604763sec
+    inet6 fe80::3f2f:717:b9e0:198c/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 02:42:1d:04:6e:2f brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+5: veth0@if4: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 4e:0b:f4:ed:34:f4 brd ff:ff:ff:ff:ff:ff link-netns testns123
+andrey@utm-vm:~$ sudo ip addr add 10.0.0.1/24 dev veth0
+andrey@utm-vm:~$ sudo ip link set dev veth0 up
+andrey@utm-vm:~$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: enp0s1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether d6:31:27:22:f4:dd brd ff:ff:ff:ff:ff:ff
+    inet 192.168.64.10/24 brd 192.168.64.255 scope global dynamic noprefixroute enp0s1
+       valid_lft 72981sec preferred_lft 72981sec
+    inet6 fd80:6dd0:22af:d13a:19f8:137e:e62c:43cb/64 scope global temporary dynamic 
+       valid_lft 548183sec preferred_lft 29735sec
+    inet6 fd80:6dd0:22af:d13a:fb46:bef4:54a0:a2d8/64 scope global dynamic mngtmpaddr noprefixroute 
+       valid_lft 2591971sec preferred_lft 604771sec
+    inet6 fe80::3f2f:717:b9e0:198c/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 02:42:1d:04:6e:2f brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+5: veth0@if4: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state LOWERLAYERDOWN group default qlen 1000
+    link/ether 4e:0b:f4:ed:34:f4 brd ff:ff:ff:ff:ff:ff link-netns testns123
+    inet 10.0.0.1/24 scope global veth0
+       valid_lft forever preferred_lft forever
+andrey@utm-vm:~$ ping 10.0.0.2
+PING 10.0.0.2 (10.0.0.2) 56(84) bytes of data.
+64 bytes from 10.0.0.2: icmp_seq=1 ttl=64 time=0.197 ms
+64 bytes from 10.0.0.2: icmp_seq=2 ttl=64 time=0.138 ms
+64 bytes from 10.0.0.2: icmp_seq=3 ttl=64 time=0.235 ms
+^C
+--- 10.0.0.2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2034ms
+rtt min/avg/max/mdev = 0.138/0.190/0.235/0.039 ms
+andrey@utm-vm:~$ 
+
+
+
+# Task 3
+
+andrey@utm-vm:~$ ls -l /proc/$$
+total 0
+dr-xr-xr-x  2 andrey andrey 0 июл 11 19:28 attr
+-rw-r--r--  1 andrey andrey 0 июл 11 19:28 autogroup
+-r--------  1 andrey andrey 0 июл 11 19:28 auxv
+-r--r--r--  1 andrey andrey 0 июл 11 19:28 cgroup
+--w-------  1 andrey andrey 0 июл 11 19:28 clear_refs
+-r--r--r--  1 andrey andrey 0 июл 11 19:28 cmdline
+-rw-r--r--  1 andrey andrey 0 июл 11 19:28 comm
+-rw-r--r--  1 andrey andrey 0 июл 11 19:28 coredump_filter
+-r--r--r--  1 andrey andrey 0 июл 11 19:28 cpuset
+lrwxrwxrwx  1 andrey andrey 0 июл 11 19:28 cwd -> /home/andrey
+-r--------  1 andrey andrey 0 июл 11 19:28 environ
+lrwxrwxrwx  1 andrey andrey 0 июл 11 19:28 exe -> /usr/bin/bash
+dr-x------  2 andrey andrey 0 июл 11 19:28 fd
+dr-xr-xr-x  2 andrey andrey 0 июл 11 19:28 fdinfo
+-rw-r--r--  1 andrey andrey 0 июл 11 19:28 gid_map
+-r--------  1 andrey andrey 0 июл 11 19:28 io
+-r--------  1 andrey andrey 0 июл 11 19:28 ksm_merging_pages
+-r--r--r--  1 andrey andrey 0 июл 11 19:28 limits
+-rw-r--r--  1 andrey andrey 0 июл 11 19:28 loginuid
+dr-x------  2 andrey andrey 0 июл 11 19:28 map_files
+-r--r--r--  1 andrey andrey 0 июл 11 19:28 maps
+-rw-------  1 andrey andrey 0 июл 11 19:28 mem
+-r--r--r--  1 andrey andrey 0 июл 11 19:28 mountinfo
+-r--r--r--  1 andrey andrey 0 июл 11 19:28 mounts
+-r--------  1 andrey andrey 0 июл 11 19:28 mountstats
+dr-xr-xr-x 55 andrey andrey 0 июл 11 19:28 net
+dr-x--x--x  2 andrey andrey 0 июл 11 19:28 ns
+-r--r--r--  1 andrey andrey 0 июл 11 19:28 numa_maps
+-rw-r--r--  1 andrey andrey 0 июл 11 19:28 oom_adj
+-r--r--r--  1 andrey andrey 0 июл 11 19:28 oom_score
+-rw-r--r--  1 andrey andrey 0 июл 11 19:28 oom_score_adj
+-r--------  1 andrey andrey 0 июл 11 19:28 pagemap
+-r--------  1 andrey andrey 0 июл 11 19:28 personality
+-rw-r--r--  1 andrey andrey 0 июл 11 19:28 projid_map
+lrwxrwxrwx  1 andrey andrey 0 июл 11 19:28 root -> /
+-rw-r--r--  1 andrey andrey 0 июл 11 19:28 sched
+-r--r--r--  1 andrey andrey 0 июл 11 19:28 schedstat
+-r--r--r--  1 andrey andrey 0 июл 11 19:28 sessionid
+-rw-r--r--  1 andrey andrey 0 июл 11 19:28 setgroups
+-r--r--r--  1 andrey andrey 0 июл 11 19:28 smaps
+-r--r--r--  1 andrey andrey 0 июл 11 19:28 smaps_rollup
+-r--------  1 andrey andrey 0 июл 11 19:28 stack
+-r--r--r--  1 andrey andrey 0 июл 11 16:30 stat
+-r--r--r--  1 andrey andrey 0 июл 11 19:28 statm
+-r--r--r--  1 andrey andrey 0 июл 11 19:28 status
+-r--------  1 andrey andrey 0 июл 11 19:28 syscall
+dr-xr-xr-x  3 andrey andrey 0 июл 11 19:28 task
+-rw-r--r--  1 andrey andrey 0 июл 11 19:28 timens_offsets
+-r--r--r--  1 andrey andrey 0 июл 11 19:28 timers
+-rw-rw-rw-  1 andrey andrey 0 июл 11 19:28 timerslack_ns
+-rw-r--r--  1 andrey andrey 0 июл 11 19:28 uid_map
+-r--r--r--  1 andrey andrey 0 июл 11 19:28 wchan
+andrey@utm-vm:~$ echo $$
+11512
+andrey@utm-vm:~$ ls -l /proc/$$/ns
+total 0
+lrwxrwxrwx 1 andrey andrey 0 июл 11 19:30 cgroup -> 'cgroup:[4026531835]'
+lrwxrwxrwx 1 andrey andrey 0 июл 11 19:30 ipc -> 'ipc:[4026531839]'
+lrwxrwxrwx 1 andrey andrey 0 июл 11 19:30 mnt -> 'mnt:[4026531841]'
+lrwxrwxrwx 1 andrey andrey 0 июл 11 19:30 net -> 'net:[4026531840]'
+lrwxrwxrwx 1 andrey andrey 0 июл 11 19:30 pid -> 'pid:[4026531836]'
+lrwxrwxrwx 1 andrey andrey 0 июл 11 19:30 pid_for_children -> 'pid:[4026531836]'
+lrwxrwxrwx 1 andrey andrey 0 июл 11 19:30 time -> 'time:[4026531834]'
+lrwxrwxrwx 1 andrey andrey 0 июл 11 19:30 time_for_children -> 'time:[4026531834]'
+lrwxrwxrwx 1 andrey andrey 0 июл 11 19:30 user -> 'user:[4026531837]'
+lrwxrwxrwx 1 andrey andrey 0 июл 11 19:30 uts -> 'uts:[4026531838]'
+andrey@utm-vm:~$ sudo unshare --net /bin/bash
+[sudo] password for andrey: 
+root@utm-vm:/home/andrey# ls -l /proc/$$/ns
+total 0
+lrwxrwxrwx 1 root root 0 июл 11 19:32 cgroup -> 'cgroup:[4026531835]'
+lrwxrwxrwx 1 root root 0 июл 11 19:32 ipc -> 'ipc:[4026531839]'
+lrwxrwxrwx 1 root root 0 июл 11 19:32 mnt -> 'mnt:[4026531841]'
+lrwxrwxrwx 1 root root 0 июл 11 19:32 net -> 'net:[4026532669]'
+lrwxrwxrwx 1 root root 0 июл 11 19:32 pid -> 'pid:[4026531836]'
+lrwxrwxrwx 1 root root 0 июл 11 19:32 pid_for_children -> 'pid:[4026531836]'
+lrwxrwxrwx 1 root root 0 июл 11 19:32 time -> 'time:[4026531834]'
+lrwxrwxrwx 1 root root 0 июл 11 19:32 time_for_children -> 'time:[4026531834]'
+lrwxrwxrwx 1 root root 0 июл 11 19:32 user -> 'user:[4026531837]'
+lrwxrwxrwx 1 root root 0 июл 11 19:32 uts -> 'uts:[4026531838]'
+root@utm-vm:/home/andrey# top
+
+top - 19:34:10 up 16:08,  3 users,  load average: 0,00, 0,00, 0,00
+Tasks: 216 total,   1 running, 215 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0,2 us,  0,2 sy,  0,0 ni, 99,6 id,  0,0 wa,  0,0 hi,  0,0 si,  0,0 st
+MiB Mem :   3905,5 total,   1325,4 free,    946,7 used,   1633,4 buff/cache
+MiB Swap:   2140,0 total,   2140,0 free,      0,0 used.   2784,1 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND                                                                            
+   1557 andrey    20   0 5488048 431028 137396 S   0,7  10,8   2:11.50 gnome-shell                                                                        
+     15 root      20   0       0      0      0 I   0,3   0,0   0:15.50 rcu_preempt                                                                        
+    483 systemd+  20   0   15004   3752   3012 S   0,3   0,1   2:10.37 systemd-oomd                                                                       
+    635 root      20   0 1631460  38024  25240 S   0,3   1,0   4:05.12 containerd                                                                         
+  12791 root      20   0   13080   3776   2996 R   0,3   0,1   0:00.06 top                                                                                
+      1 root      20   0  168332  11708   7500 S   0,0   0,3   0:03.92 systemd                                                                            
+      2 root      20   0       0      0      0 S   0,0   0,0   0:00.02 kthreadd                                                                           
+      3 root       0 -20       0      0      0 I   0,0   0,0   0:00.00 rcu_gp                                                                             
+      4 root       0 -20       0      0      0 I   0,0   0,0   0:00.00 rcu_par_gp                                                                         
+      5 root       0 -20       0      0      0 I   0,0   0,0   0:00.00 slub_flushwq                                                                       
+      6 root       0 -20       0      0      0 I   0,0   0,0   0:00.00 netns                                                                              
+      8 root       0 -20       0      0      0 I   0,0   0,0   0:00.00 kworker/0:0H-events_highpri                                                        
+     10 root       0 -20       0      0      0 I   0,0   0,0   0:00.00 mm_percpu_wq                                                                       
+     11 root      20   0       0      0      0 I   0,0   0,0   0:00.00 rcu_tasks_kthread                                                                  
+     12 root      20   0       0      0      0 I   0,0   0,0   0:00.00 rcu_tasks_rude_kthread                                                             
+     13 root      20   0       0      0      0 I   0,0   0,0   0:00.00 rcu_tasks_trace_kthread                                                            
+     14 root      20   0       0      0      0 S   0,0   0,0   0:00.04 ksoftirqd/0                                                                        
+     16 root      rt   0       0      0      0 S   0,0   0,0   0:00.82 migration/0                                                                        
+     17 root     -51   0       0      0      0 S   0,0   0,0   0:00.00 idle_inject/0                                                                      
+     19 root      20   0       0      0      0 S   0,0   0,0   0:00.00 cpuhp/0                                                                            
+     20 root      20   0       0      0      0 S   0,0   0,0   0:00.00 cpuhp/1                                                                            
+     21 root     -51   0       0      0      0 S   0,0   0,0   0:00.00 idle_inject/1                                                                      
+     22 root      rt   0       0      0      0 S   0,0   0,0   0:00.87 migration/1                                                                        
+     23 root      20   0       0      0      0 S   0,0   0,0   0:00.03 ksoftirqd/1                                                                        
+     25 root       0 -20       0      0      0 I   0,0   0,0   0:00.00 kworker/1:0H-events_highpri                                                        
+     26 root      20   0       0      0      0 S   0,0   0,0   0:00.00 cpuhp/2                                                                            
+     27 root     -51   0       0      0      0 S   0,0   0,0   0:00.00 idle_inject/2                                                                      
+     28 root      rt   0       0      0      0 S   0,0   0,0   0:00.82 migration/2                                                                        
+     29 root      20   0       0      0      0 S   0,0   0,0   0:00.02 ksoftirqd/2                                                                        
+     31 root       0 -20       0      0      0 I   0,0   0,0   0:00.00 kworker/2:0H-events_highpri                                                        
+     32 root      20   0       0      0      0 S   0,0   0,0   0:00.00 cpuhp/3                                                                            
+     33 root     -51   0       0      0      0 S   0,0   0,0   0:00.00 idle_inject/3                                                                      
+     34 root      rt   0       0      0      0 S   0,0   0,0   0:00.84 migration/3                                                                        
+     35 root      20   0       0      0      0 S   0,0   0,0   0:00.02 ksoftirqd/3                                                                        
+     37 root       0 -20       0      0      0 I   0,0   0,0   0:00.00 kworker/3:0H-events_highpri                                                        
+root@utm-vm:/home/andrey# exit
+exit
+andrey@utm-vm:~$ sudo unshare --pid --net --fork --mount-proc /bin/bash 
+root@utm-vm:/home/andrey# exit
+exit
+andrey@utm-vm:~$ ls -l /proc/$$/ns
+total 0
+lrwxrwxrwx 1 andrey andrey 0 июл 11 19:30 cgroup -> 'cgroup:[4026531835]'
+lrwxrwxrwx 1 andrey andrey 0 июл 11 19:30 ipc -> 'ipc:[4026531839]'
+lrwxrwxrwx 1 andrey andrey 0 июл 11 19:30 mnt -> 'mnt:[4026531841]'
+lrwxrwxrwx 1 andrey andrey 0 июл 11 19:30 net -> 'net:[4026531840]'
+lrwxrwxrwx 1 andrey andrey 0 июл 11 19:30 pid -> 'pid:[4026531836]'
+lrwxrwxrwx 1 andrey andrey 0 июл 11 19:30 pid_for_children -> 'pid:[4026531836]'
+lrwxrwxrwx 1 andrey andrey 0 июл 11 19:30 time -> 'time:[4026531834]'
+lrwxrwxrwx 1 andrey andrey 0 июл 11 19:30 time_for_children -> 'time:[4026531834]'
+lrwxrwxrwx 1 andrey andrey 0 июл 11 19:30 user -> 'user:[4026531837]'
+lrwxrwxrwx 1 andrey andrey 0 июл 11 19:30 uts -> 'uts:[4026531838]'
+andrey@utm-vm:~$ sudo unshare --pid --net --fork --mount-proc /bin/bash 
+root@utm-vm:/home/andrey# ls -l /proc/$$/ns
+total 0
+lrwxrwxrwx 1 root root 0 июл 11 19:37 cgroup -> 'cgroup:[4026531835]'
+lrwxrwxrwx 1 root root 0 июл 11 19:37 ipc -> 'ipc:[4026531839]'
+lrwxrwxrwx 1 root root 0 июл 11 19:37 mnt -> 'mnt:[4026532669]'
+lrwxrwxrwx 1 root root 0 июл 11 19:37 net -> 'net:[4026532673]'
+lrwxrwxrwx 1 root root 0 июл 11 19:37 pid -> 'pid:[4026532672]'
+lrwxrwxrwx 1 root root 0 июл 11 19:37 pid_for_children -> 'pid:[4026532672]'
+lrwxrwxrwx 1 root root 0 июл 11 19:37 time -> 'time:[4026531834]'
+lrwxrwxrwx 1 root root 0 июл 11 19:37 time_for_children -> 'time:[4026531834]'
+lrwxrwxrwx 1 root root 0 июл 11 19:37 user -> 'user:[4026531837]'
+lrwxrwxrwx 1 root root 0 июл 11 19:37 uts -> 'uts:[4026531838]'
+root@utm-vm:/home/andrey# top
+
+top - 19:38:03 up 16:12,  3 users,  load average: 0,00, 0,00, 0,00
+Tasks:   2 total,   1 running,   1 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0,1 us,  0,1 sy,  0,0 ni, 99,8 id,  0,0 wa,  0,0 hi,  0,0 si,  0,0 st
+MiB Mem :   3905,5 total,   1325,7 free,    946,3 used,   1633,5 buff/cache
+MiB Swap:   2140,0 total,   2140,0 free,      0,0 used.   2784,4 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND                                                                            
+      1 root      20   0   10140   4036   3484 S   0,0   0,1   0:00.00 bash                                                                               
+      9 root      20   0   12836   3120   2756 R   0,0   0,1   0:00.01 top                                                                                
+
+
+root@utm-vm:/home/andrey# ip a
+1: lo: <LOOPBACK> mtu 65536 qdisc noop state DOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+root@utm-vm:/home/andrey# exit
+exit
+andrey@utm-vm:~$ exit
+logout
+Connection to 192.168.64.10 closed.
+(base) a_zavershinskiy@MBP--AZavershinskiy ~ % exit
+
+Saving session...
+...copying shared history...
+...saving history...truncating history files...
+...completed.
+
+[Process completed]
