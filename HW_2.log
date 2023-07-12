@@ -1,0 +1,255 @@
+Last login: Wed Jul 12 16:14:48 on ttys003
+(base) a_zavershinskiy@MBP--AZavershinskiy ~ % ssh andrey@192.168.64.10
+
+
+// Task 1
+
+andrey@utm-vm:~$ sudo lxc-create -n testgb-2 -t ubuntu
+lxc-create: testgb-2: tools/lxc_create.c: main: 264 Container already exists
+andrey@utm-vm:~$ sudo lxc-start -n testgb-2
+andrey@utm-vm:~$ sudo lxc-ls
+testgb-2 
+andrey@utm-vm:~$ free -m
+               total        used        free      shared  buff/cache   available
+Mem:            3905         933         526          22        2446        2774
+Swap:           2139           0        2139
+andrey@utm-vm:~$ sudo lxc-attach -n testgb-2
+root@testgb-2:/# free -m
+               total        used        free      shared  buff/cache   available
+Mem:            3905          26        3874           0           4        3878
+Swap:              0           0           0
+root@testgb-2:/# cd /
+root@testgb-2:/# ll
+total 52
+drwxr-xr-x  17 root root 4096 Jul 12 14:56 ./
+drwxr-xr-x  17 root root 4096 Jul 12 14:56 ../
+lrwxrwxrwx   1 root root    7 Jul 12 14:51 bin -> usr/bin/
+drwxr-xr-x   2 root root 4096 Apr 18  2022 boot/
+drwxr-xr-x   7 root root  540 Jul 12 14:56 dev/
+drwxr-xr-x  63 root root 4096 Jul 12 14:53 etc/
+drwxr-xr-x   3 root root 4096 Jul 12 14:53 home/
+lrwxrwxrwx   1 root root    7 Jul 12 14:51 lib -> usr/lib/
+drwxr-xr-x   2 root root 4096 Jul 12 14:51 media/
+drwxr-xr-x   2 root root 4096 Jul 12 14:51 mnt/
+drwxr-xr-x   2 root root 4096 Jul 12 14:51 opt/
+dr-xr-xr-x 304 root root    0 Jul 12 14:56 proc/
+drwx------   2 root root 4096 Jul 12 14:51 root/
+drwxr-xr-x  14 root root  420 Jul 12 14:56 run/
+lrwxrwxrwx   1 root root    8 Jul 12 14:51 sbin -> usr/sbin/
+drwxr-xr-x   2 root root 4096 Jul 12 14:51 srv/
+dr-xr-xr-x  13 root root    0 Jul 12 14:56 sys/
+drwxrwxrwt   9 root root 4096 Jul 12 14:57 tmp/
+drwxr-xr-x  11 root root 4096 Jul 12 14:51 usr/
+drwxr-xr-x  11 root root 4096 Jul 12 14:51 var/
+root@testgb-2:/# exit
+exit
+andrey@utm-vm:~$ sudo lxc-cgroup -n testgb-2 memory.max 256M
+andrey@utm-vm:~$ sudo lxc-attach -n testgb-2
+root@testgb-2:/# exit
+exit
+andrey@utm-vm:~$ free -m
+               total        used        free      shared  buff/cache   available
+Mem:            3905         938         520          22        2446        2769
+Swap:           2139           0        2139
+andrey@utm-vm:~$ sudo lxc-attach -n testgb-2
+root@testgb-2:/# free -m
+               total        used        free      shared  buff/cache   available
+Mem:             256          26         225           0           4         229
+Swap:              0           0           0
+root@testgb-2:/# top
+
+
+top - 15:08:47 up 11 min,  0 users,  load average: 0.14, 0.09, 0.09
+Tasks:  17 total,   1 running,  16 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us,  0.1 sy,  0.0 ni, 99.9 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem :    256.0 total,    224.8 free,     27.1 used,      4.1 buff/cache
+MiB Swap:      0.0 total,      0.0 free,      0.0 used.    228.9 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND                                                                          
+    127 root      20   0   12292   2460   2124 R   0.3   0.9   0:00.14 top                                                                              
+      1 root      20   0  165772  10124   7668 S   0.0   3.9   0:00.09 systemd                                                                          
+     37 root      19  -1   31556  10304   9384 S   0.0   3.9   0:00.02 systemd-journal                                                                  
+     63 systemd+  20   0   16284   6980   6068 S   0.0   2.7   0:00.02 systemd-network                                                                  
+     70 root      20   0    9120   1116    984 S   0.0   0.4   0:00.00 cron                                                                             
+     71 message+  20   0    8780   4224   3668 S   0.0   1.6   0:00.00 dbus-daemon                                                                      
+     73 root      20   0   34204  18128   9572 S   0.0   6.9   0:00.04 networkd-dispat                                                                  
+     74 syslog    20   0  222024   4240   3692 S   0.0   1.6   0:00.00 rsyslogd                                                                         
+     75 root      20   0   15076   6524   5680 S   0.0   2.5   0:00.01 systemd-logind                                                                   
+     79 systemd+  20   0   25224  11692   7532 S   0.0   4.5   0:00.01 systemd-resolve                                                                  
+     82 root      20   0    7816    796    720 S   0.0   0.3   0:00.00 agetty                                                                           
+     83 root      20   0    7816    808    732 S   0.0   0.3   0:00.00 agetty                                                                           
+     84 root      20   0    7816    812    732 S   0.0   0.3   0:00.00 agetty                                                                           
+     85 root      20   0    7816    812    732 S   0.0   0.3   0:00.00 agetty                                                                           
+     86 root      20   0    7816    792    716 S   0.0   0.3   0:00.00 agetty                                                                           
+     87 root      20   0   15136   8048   6516 S   0.0   3.1   0:00.00 sshd                                                                             
+    119 root      20   0   10136   3664   3132 S   0.0   1.4   0:00.00 bash                                                                             
+
+
+root@testgb-2:/# exit
+exit
+andrey@utm-vm:~$ 
+
+
+// Task 2*
+// У МЕНЯ НЕ ПОЛУЧИЛОСЬ
+
+andrey@utm-vm:~$ sudo lxc-ls -f
+NAME  STATE   AUTOSTART GROUPS IPV4                  IPV6 UNPRIVILEGED 
+test1 RUNNING 0         -      10.0.3.224            -    false        
+test2 RUNNING 0         -      10.0.13.0, 10.0.3.142 -    false        
+andrey@utm-vm:~$ sudo lxc-attach -n test2
+root@test2:/# ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: eth0@if9: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 00:16:3e:06:a6:3c brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.0.13.0/24 brd 10.0.13.255 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet 10.0.3.142/24 metric 100 brd 10.0.3.255 scope global dynamic eth0
+       valid_lft 2020sec preferred_lft 2020sec
+    inet6 fe80::216:3eff:fe06:a63c/64 scope link 
+       valid_lft forever preferred_lft forever
+andrey@utm-vm:~$ sudo lxc-attach -n test1
+root@test1:/# ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: eth0@if10: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 00:16:3e:92:0d:4e brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.0.3.224/24 metric 100 brd 10.0.3.255 scope global dynamic eth0
+       valid_lft 3457sec preferred_lft 3457sec
+    inet6 fe80::216:3eff:fe92:d4e/64 scope link 
+       valid_lft forever preferred_lft forever
+root@test1:/# sudo ip link add veth1 type veth
+root@test1:/# ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: eth0@if10: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 00:16:3e:92:0d:4e brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.0.3.224/24 metric 100 brd 10.0.3.255 scope global dynamic eth0
+       valid_lft 3437sec preferred_lft 3437sec
+    inet6 fe80::216:3eff:fe92:d4e/64 scope link 
+       valid_lft forever preferred_lft forever
+4: veth0@veth1: <BROADCAST,MULTICAST,M-DOWN> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 7a:cb:96:df:d4:df brd ff:ff:ff:ff:ff:ff
+5: veth1@veth0: <BROADCAST,MULTICAST,M-DOWN> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 32:8c:a1:d7:52:66 brd ff:ff:ff:ff:ff:ff
+root@test1:/# sudo ip addr add 10.0.12.0/24 dev veth0
+root@test1:/# ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: eth0@if10: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 00:16:3e:92:0d:4e brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.0.3.224/24 metric 100 brd 10.0.3.255 scope global dynamic eth0
+       valid_lft 2604sec preferred_lft 2604sec
+    inet6 fe80::216:3eff:fe92:d4e/64 scope link 
+       valid_lft forever preferred_lft forever
+4: veth0@veth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 7a:cb:96:df:d4:df brd ff:ff:ff:ff:ff:ff
+    inet 10.0.12.0/24 scope global veth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::78cb:96ff:fedf:d4df/64 scope link 
+       valid_lft forever preferred_lft forever
+5: veth1@veth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 32:8c:a1:d7:52:66 brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::308c:a1ff:fed7:5266/64 scope link 
+       valid_lft forever preferred_lft forever
+root@test1:/# exit
+exit
+andrey@utm-vm:~$ sudo lxc-ls -f
+NAME  STATE   AUTOSTART GROUPS IPV4                  IPV6 UNPRIVILEGED 
+test1 RUNNING 0         -      10.0.12.0, 10.0.3.224 -    false        
+test2 RUNNING 0         -      10.0.13.0, 10.0.3.142 -    false        
+andrey@utm-vm:~$ sudo lxc-attach -n test2
+root@test2:/# ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: eth0@if9: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 00:16:3e:06:a6:3c brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.0.13.0/24 brd 10.0.13.255 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet 10.0.3.142/24 metric 100 brd 10.0.3.255 scope global dynamic eth0
+       valid_lft 3377sec preferred_lft 3377sec
+    inet6 fe80::216:3eff:fe06:a63c/64 scope link 
+       valid_lft forever preferred_lft forever
+root@test2:/# sudo ip link add veth1 type veth
+root@test2:/# ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: eth0@if9: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 00:16:3e:06:a6:3c brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.0.13.0/24 brd 10.0.13.255 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet 10.0.3.142/24 metric 100 brd 10.0.3.255 scope global dynamic eth0
+       valid_lft 3360sec preferred_lft 3360sec
+    inet6 fe80::216:3eff:fe06:a63c/64 scope link 
+       valid_lft forever preferred_lft forever
+3: veth0@veth1: <BROADCAST,MULTICAST,M-DOWN> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 0e:91:3f:c9:2e:cb brd ff:ff:ff:ff:ff:ff
+4: veth1@veth0: <BROADCAST,MULTICAST,M-DOWN> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 36:92:ec:6d:ac:67 brd ff:ff:ff:ff:ff:ff
+root@test2:/# sudo ip addr add 10.0.13.0/24 dev veth0
+root@test2:/# ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: eth0@if9: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 00:16:3e:06:a6:3c brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.0.13.0/24 brd 10.0.13.255 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet 10.0.3.142/24 metric 100 brd 10.0.3.255 scope global dynamic eth0
+       valid_lft 2880sec preferred_lft 2880sec
+    inet6 fe80::216:3eff:fe06:a63c/64 scope link 
+       valid_lft forever preferred_lft forever
+3: veth0@veth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 0e:91:3f:c9:2e:cb brd ff:ff:ff:ff:ff:ff
+    inet 10.0.13.0/24 scope global veth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::c91:3fff:fec9:2ecb/64 scope link 
+       valid_lft forever preferred_lft forever
+4: veth1@veth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 36:92:ec:6d:ac:67 brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::3492:ecff:fe6d:ac67/64 scope link 
+       valid_lft forever preferred_lft forever
+root@test2:/# exit
+exit
+andrey@utm-vm:~$ sudo lxc-ls -f
+NAME  STATE   AUTOSTART GROUPS IPV4                             IPV6 UNPRIVILEGED 
+test1 RUNNING 0         -      10.0.12.0, 10.0.3.224            -    false        
+test2 RUNNING 0         -      10.0.13.0, 10.0.13.0, 10.0.3.142 -    false        
+andrey@utm-vm:~$ sudo lxc-attach -n test1
+root@test1:/# ping 10.0.13.0
+PING 10.0.13.0 (10.0.13.0) 56(84) bytes of data.
+^C
+--- 10.0.13.0 ping statistics ---
+4 packets transmitted, 0 received, 100% packet loss, time 3075ms
+
+root@test1:/# exit
+exit
+andrey@utm-vm:~$ 
