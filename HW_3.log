@@ -1,0 +1,298 @@
+// Tasks 1, 2
+
+andrey@utm-vm:~$ mkdir ourdb
+andrey@utm-vm:~$ ls -l
+total 124
+drwxr-xr-x 3 andrey andrey 4096 июл 14 14:12 Desktop
+drwxr-xr-x 2 andrey andrey 4096 апр 23 03:50 Documents
+drwxr-xr-x 2 andrey andrey 4096 апр 23 03:50 Downloads
+drwxrwxr-x 5 andrey andrey 4096 июл 11 18:13 GB
+drwxrwxr-x 4 andrey andrey 4096 мая 17 01:49 ICW
+drwxr-xr-x 2 andrey andrey 4096 апр 23 03:50 Music
+drwxr-xr-x 2 andrey andrey 4096 апр 23 03:50 Pictures
+drwxr-xr-x 2 andrey andrey 4096 апр 23 03:50 Public
+drwxr-xr-x 2 andrey andrey 4096 апр 23 03:50 Templates
+drwxr-xr-x 2 andrey andrey 4096 апр 23 03:50 Videos
+-rw-rw-r-- 1 andrey andrey  140 апр 26 14:01 all.txt
+-rwxrwxr-x 1 andrey andrey  208 апр 26 18:31 cycles.sh
+-rw-rw-r-- 1 andrey andrey    0 апр 26 14:01 err.txt
+-rw-rw-r-- 1 andrey andrey  435 июл 10 16:46 example1.c
+-rwxrwxr-x 1 andrey andrey 9096 июл 10 16:47 example1.sh
+-rw-rw-r-- 1 andrey andrey  535 июл 10 17:08 example2.c
+-rwxrwxr-x 1 andrey andrey 9096 июл 10 17:09 example2.sh
+-rw-rw-r-- 1 andrey andrey  886 июл 10 17:27 example3.c
+-rwxrwxr-x 1 andrey andrey 9368 июл 10 17:27 example3.sh
+drwxrwxr-x 2 andrey andrey 4096 июл 11 18:13 ls
+-rw-rw-r-- 1 andrey andrey   83 апр 26 13:58 ls_txt
+drwxrwxr-x 3 andrey docker 4096 апр 26 23:38 lws
+drwxrwxr-x 2 andrey andrey 4096 июл 14 18:53 ourdb
+-rw-rw-r-- 1 andrey andrey  104 апр 26 13:59 sdt.txt
+drwx------ 6 andrey andrey 4096 июл 12 14:44 snap
+-rwxrwxr-x 1 andrey andrey  332 апр 26 18:20 testsc
+andrey@utm-vm:~$ docker run --name tetst-mariadb-gb-1 -e MARIADB_ROOT_PASSWORD=test123 -v ./ourdb:/var/lib/mysql -d mariadb:10.10.2
+Unable to find image 'mariadb:10.10.2' locally
+10.10.2: Pulling from library/mariadb
+565cb979c5c0: Pull complete 
+69f4258cab38: Pull complete 
+75aa640c13b1: Pull complete 
+158ff8362680: Pull complete 
+b6af53dbcc52: Pull complete 
+7ee0542ebe92: Pull complete 
+10afc8d4c5a2: Pull complete 
+3d0c228ae19c: Pull complete 
+Digest: sha256:bfc25a68e113de43d0d112f5a7126df8e278579c3224e3923359e1c1d8d5ce6e
+Status: Downloaded newer image for mariadb:10.10.2
+ef01a8d3148372f6d9aae5c03c33c6576a0b870a08217a56dcf8d69c98174e74
+andrey@utm-vm:~$ docker ps
+CONTAINER ID   IMAGE             COMMAND                  CREATED          STATUS          PORTS      NAMES
+ef01a8d31483   mariadb:10.10.2   "docker-entrypoint.s…"   47 seconds ago   Up 47 seconds   3306/tcp   tetst-mariadb-gb-1
+andrey@utm-vm:~$ docker exec -it ef01a8d31483 bash
+root@ef01a8d31483:/# ls -l
+total 56
+lrwxrwxrwx   1 root root    7 Jan 26 02:08 bin -> usr/bin
+drwxr-xr-x   2 root root 4096 Apr 18  2022 boot
+drwxr-xr-x   5 root root  340 Jul 14 17:05 dev
+drwxr-xr-x   2 root root 4096 Jan 31 18:59 docker-entrypoint-initdb.d
+drwxr-xr-x   1 root root 4096 Jul 14 17:05 etc
+drwxr-xr-x   2 root root 4096 Apr 18  2022 home
+lrwxrwxrwx   1 root root    7 Jan 26 02:08 lib -> usr/lib
+drwxr-xr-x   2 root root 4096 Jan 26 02:09 media
+drwxr-xr-x   2 root root 4096 Jan 26 02:09 mnt
+drwxr-xr-x   2 root root 4096 Jan 26 02:09 opt
+dr-xr-xr-x 283 root root    0 Jul 14 17:05 proc
+drwx------   1 root root 4096 Jan 31 18:59 root
+drwxr-xr-x   1 root root 4096 Jan 31 19:00 run
+lrwxrwxrwx   1 root root    8 Jan 26 02:08 sbin -> usr/sbin
+drwxr-xr-x   2 root root 4096 Jan 26 02:09 srv
+dr-xr-xr-x  13 root root    0 Jul 14 17:05 sys
+drwxrwxrwt   1 root root 4096 Jul 14 17:05 tmp
+drwxr-xr-x   1 root root 4096 Jan 26 02:09 usr
+drwxr-xr-x   1 root root 4096 Jan 26 02:34 var
+root@ef01a8d31483:/# top
+
+top - 17:07:17 up  1:03,  0 users,  load average: 0.11, 0.11, 0.04
+Tasks:   3 total,   1 running,   2 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.1 us,  0.0 sy,  0.0 ni, 99.9 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem :   3905.5 total,   1193.1 free,    963.0 used,   1749.4 buff/cache
+MiB Swap:   2140.0 total,   2140.0 free,      0.0 used.   2755.1 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND                                                                         
+      1 mysql     20   0 1628084  99944  21784 S   0.0   2.5   0:00.16 mariadbd                                                                        
+    145 root      20   0    4556   3632   3112 S   0.0   0.1   0:00.02 bash                                                                            
+    154 root      20   0    7128   2640   2304 R   0.0   0.1   0:00.01 top                                                                             
+
+
+root@ef01a8d31483:/# mysql -u root -p
+Enter password: 
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 3
+Server version: 10.10.2-MariaDB-1:10.10.2+maria~ubu2204 mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.002 sec)
+
+MariaDB [(none)]> CREATE DATABASE gb;
+Query OK, 1 row affected (0.001 sec)
+
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| gb                 |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.007 sec)
+
+MariaDB [(none)]> exit
+Bye
+root@ef01a8d31483:/# exit
+exit
+andrey@utm-vm:~$ docker ps
+CONTAINER ID   IMAGE             COMMAND                  CREATED          STATUS          PORTS      NAMES
+ef01a8d31483   mariadb:10.10.2   "docker-entrypoint.s…"   15 minutes ago   Up 15 minutes   3306/tcp   tetst-mariadb-gb-1
+
+// из другой вкладки:
+
+andrey@utm-vm:~/ourdb$ ls -l
+total 139372
+-rw-rw---- 1 lxd 999  16842752 июл 14 19:05 aria_log.00000001
+-rw-rw---- 1 lxd 999        52 июл 14 19:05 aria_log_control
+-rw-rw---- 1 lxd 999         9 июл 14 19:05 ddl_recovery.log
+-rw-rw---- 1 lxd 999       868 июл 14 19:05 ib_buffer_pool
+-rw-rw---- 1 lxd 999 100663296 июл 14 19:05 ib_logfile0
+-rw-rw---- 1 lxd 999  12582912 июл 14 19:05 ibdata1
+-rw-rw---- 1 lxd 999  12582912 июл 14 19:05 ibtmp1
+-rw-rw---- 1 lxd 999         0 июл 14 19:05 multi-master.info
+drwx------ 2 lxd 999      4096 июл 14 19:05 mysql
+-rw-r--r-- 1 lxd 999        15 июл 14 19:05 mysql_upgrade_info
+drwx------ 2 lxd 999      4096 июл 14 19:05 performance_schema
+drwx------ 2 lxd 999     12288 июл 14 19:05 sys
+
+andrey@utm-vm:~/ourdb$ ls -l
+total 139376
+-rw-rw---- 1 lxd 999  16842752 июл 14 19:05 aria_log.00000001
+-rw-rw---- 1 lxd 999        52 июл 14 19:05 aria_log_control
+-rw-rw---- 1 lxd 999         9 июл 14 19:05 ddl_recovery.log
+drwx------ 2 lxd 999      4096 июл 14 19:08 gb
+-rw-rw---- 1 lxd 999       868 июл 14 19:05 ib_buffer_pool
+-rw-rw---- 1 lxd 999 100663296 июл 14 19:07 ib_logfile0
+-rw-rw---- 1 lxd 999  12582912 июл 14 19:05 ibdata1
+-rw-rw---- 1 lxd 999  12582912 июл 14 19:05 ibtmp1
+-rw-rw---- 1 lxd 999         0 июл 14 19:05 multi-master.info
+drwx------ 2 lxd 999      4096 июл 14 19:05 mysql
+-rw-r--r-- 1 lxd 999        15 июл 14 19:05 mysql_upgrade_info
+drwx------ 2 lxd 999      4096 июл 14 19:05 performance_schema
+drwx------ 2 lxd 999     12288 июл 14 19:05 sys
+andrey@utm-vm:~/ourdb$ 
+
+
+
+// Task 3 
+
+andrey@utm-vm:~$ docker run --name my-phpmyadmin-gb-1 -d --link test-mariadb-gb-1:db -p 8081:80 phpmyadmin/phpmyadmin
+Unable to find image 'phpmyadmin/phpmyadmin:latest' locally
+latest: Pulling from phpmyadmin/phpmyadmin
+f1f26f570256: Pull complete 
+ee0a4e40ccac: Pull complete 
+5ca9fb408faa: Pull complete 
+5baa808a48ff: Pull complete 
+6e8d74e4d8ee: Pull complete 
+fac8e70fcf67: Pull complete 
+b3b7906fb177: Pull complete 
+cb4935bbeb83: Pull complete 
+c9e00ef337e3: Pull complete 
+cfe495c8d695: Pull complete 
+dcc3fd107f0c: Pull complete 
+fe3c587d1f07: Pull complete 
+677f27d94442: Pull complete 
+4d778a8cb653: Pull complete 
+5f0f7b557ecd: Pull complete 
+6ad259d60f7c: Pull complete 
+41acd705cbc4: Pull complete 
+912204d5a7e6: Pull complete 
+Digest: sha256:ed87921184b59f7d8fc85c6a5f041c22758a4d4419c0ee3bac38eb7e133eaed3
+Status: Downloaded newer image for phpmyadmin/phpmyadmin:latest
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+103f786500f56a610f8e399c005f0b0e98d004b2086a0d3fcb115fbc51619e98
+andrey@utm-vm:~$ docker ps
+CONTAINER ID   IMAGE             COMMAND                  CREATED          STATUS          PORTS      NAMES
+ef01a8d31483   mariadb:10.10.2   "docker-entrypoint.s…"   27 minutes ago   Up 27 minutes   3306/tcp   tetst-mariadb-gb-1
+andrey@utm-vm:~$ docker run --name my-phpmyadmin-gb-2 -d --link tetst-mariadb-gb-1:db -p 8081:80 phpmyadmin/phpmyadmin
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+673ed9fcdddb196c2378bd78d9c3b5645f72ccdbe5299958cdb13d1cf2d3633c
+andrey@utm-vm:~$ 
+andrey@utm-vm:~$ docker run --name phpmyadmin-test1 -d --link tetst-mariadb-gb-1:db -p 8082:80 phpmyadmin
+Unable to find image 'phpmyadmin:latest' locally
+latest: Pulling from library/phpmyadmin
+3ae0c06b4d3a: Pull complete 
+d37d52eeb040: Pull complete 
+1004c1ea98aa: Pull complete 
+00817655af3b: Pull complete 
+d2eae06ed188: Pull complete 
+32465e990ab2: Pull complete 
+ad8068a097d0: Pull complete 
+d9ca373df594: Pull complete 
+f0ba23a8da8d: Pull complete 
+7d5f87e10d1d: Pull complete 
+f9886766cf5a: Pull complete 
+499c8e530c63: Pull complete 
+b943d856aeec: Pull complete 
+fa6cfc9bf3b2: Pull complete 
+c82e18d6196f: Pull complete 
+93247b9b61e5: Pull complete 
+5c382bc1de8d: Pull complete 
+cdbc9278c72d: Pull complete 
+Digest: sha256:d443c8456709cee4d5f0cd61dbca45acd62cc51bdaf70db0946c461475349167
+Status: Downloaded newer image for phpmyadmin:latest
+a8839461814d894563d66f170c75f133d9030671b9e85b160bf4646022143f37
+andrey@utm-vm:~$ docker ps
+CONTAINER ID   IMAGE             COMMAND                  CREATED         STATUS         PORTS                                   NAMES
+a8839461814d   phpmyadmin        "/docker-entrypoint.…"   2 minutes ago   Up 2 minutes   0.0.0.0:8082->80/tcp, :::8082->80/tcp   phpmyadmin-test1
+ef01a8d31483   mariadb:10.10.2   "docker-entrypoint.s…"   3 hours ago     Up 3 hours     3306/tcp                                tetst-mariadb-gb-1
+
+// "/Containerization/Screenshot for HW_3_t3.png" - добавил через ГИ датабазу gb2
+
+andrey@utm-vm:~$ cd ourdb/
+andrey@utm-vm:~/ourdb$ ls -l
+total 139380
+-rw-rw---- 1 lxd 999  16842752 июл 14 19:05 aria_log.00000001
+-rw-rw---- 1 lxd 999        52 июл 14 19:05 aria_log_control
+-rw-rw---- 1 lxd 999         9 июл 14 19:05 ddl_recovery.log
+drwx------ 2 lxd 999      4096 июл 14 19:08 gb
+drwx------ 2 lxd 999      4096 июл 14 21:40 gb2
+-rw-rw---- 1 lxd 999       868 июл 14 19:05 ib_buffer_pool
+-rw-rw---- 1 lxd 999 100663296 июл 14 19:07 ib_logfile0
+-rw-rw---- 1 lxd 999  12582912 июл 14 19:05 ibdata1
+-rw-rw---- 1 lxd 999  12582912 июл 14 19:05 ibtmp1
+-rw-rw---- 1 lxd 999         0 июл 14 19:05 multi-master.info
+drwx------ 2 lxd 999      4096 июл 14 19:05 mysql
+-rw-r--r-- 1 lxd 999        15 июл 14 19:05 mysql_upgrade_info
+drwx------ 2 lxd 999      4096 июл 14 19:05 performance_schema
+drwx------ 2 lxd 999     12288 июл 14 19:05 sys
+andrey@utm-vm:~/ourdb$ 
+andrey@utm-vm:~/ourdb$ docker exec -it ef01a8d31483 bash
+root@ef01a8d31483:/# mysql -u root -p
+Enter password: 
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 34
+Server version: 10.10.2-MariaDB-1:10.10.2+maria~ubu2204 mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| gb                 |
+| gb2                |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+6 rows in set (0.003 sec)
+
+MariaDB [(none)]> exit
+Bye
+root@ef01a8d31483:/# exit
+exit
+
+
+
+// Task 4*
+
+andrey@utm-vm:~$ docker run --name test2-postgres -e POSTGRES_PASSWORD=test123 -v ./ourdb:/var/lib/mysql -d postgres
+ef83071931a1c3ca272ddf867a1261c22f71676c16e91ec931c64635b5c87ef4
+andrey@utm-vm:~$ docker ps
+CONTAINER ID   IMAGE             COMMAND                  CREATED         STATUS         PORTS                                       NAMES
+ef83071931a1   postgres          "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes   5432/tcp                                    test2-postgres
+a8839461814d   phpmyadmin        "/docker-entrypoint.…"   2 hours ago     Up 2 hours     0.0.0.0:8082->80/tcp, :::8082->80/tcp       phpmyadmin-test1
+ef01a8d31483   mariadb:10.10.2   "docker-entrypoint.s…"   4 hours ago     Up 4 hours     3306/tcp                                    tetst-mariadb-gb-1
+andrey@utm-vm:~$ docker run --name test2-adminer --link test1-postgres:db -p 8083:8080 -d adminer
+b938488233ad021aba90c62acf38200a18d16bf2e5814a56797399006f643eb7
+andrey@utm-vm:~$ docker ps
+CONTAINER ID   IMAGE             COMMAND                  CREATED         STATUS         PORTS                                       NAMES
+b938488233ad   adminer           "entrypoint.sh php -…"   3 minutes ago   Up 3 minutes   0.0.0.0:8083->8080/tcp, :::8083->8080/tcp   test2-adminer
+ef83071931a1   postgres          "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes   5432/tcp                                    test2-postgres
+a8839461814d   phpmyadmin        "/docker-entrypoint.…"   2 hours ago     Up 2 hours     0.0.0.0:8082->80/tcp, :::8082->80/tcp       phpmyadmin-test1
+ef01a8d31483   mariadb:10.10.2   "docker-entrypoint.s…"   4 hours ago     Up 4 hours     3306/tcp                                    tetst-mariadb-gb-1
+andrey@utm-vm:~$ 
+
+// "/Containerization/Screenshot for HW_3_t4.png" - скриншот Adminer
