@@ -1,0 +1,220 @@
+Last login: Wed Jul 19 12:20:05 on ttys000
+(base) a_zavershinskiy@MBPAZavshinskiy ~ % ssh andrey@192.168.64.10
+andrey@192.168.64.10's password: 
+Welcome to Ubuntu 22.04.2 LTS (GNU/Linux 5.19.0-46-generic aarch64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+Last login: Wed Jul 19 19:39:55 2023 from 192.168.64.1
+
+
+
+// Tasks 1, 2, 3
+
+andrey@utm-vm:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+andrey@utm-vm:~$ ls -l
+total 136
+drwxr-xr-x 2 andrey andrey 4096 июл 18 15:07 Desktop
+-rw-rw-r-- 1 andrey andrey   50 июл 19 14:25 Dockerfile
+drwxr-xr-x 2 andrey andrey 4096 апр 23 03:50 Documents
+drwxr-xr-x 2 andrey andrey 4096 апр 23 03:50 Downloads
+drwxrwxr-x 5 andrey andrey 4096 июл 11 18:13 GB
+drwxrwxr-x 4 andrey andrey 4096 мая 17 01:49 ICW
+drwxr-xr-x 2 andrey andrey 4096 апр 23 03:50 Music
+drwxr-xr-x 2 andrey andrey 4096 апр 23 03:50 Pictures
+drwxr-xr-x 2 andrey andrey 4096 апр 23 03:50 Public
+drwxr-xr-x 2 andrey andrey 4096 апр 23 03:50 Templates
+drwxr-xr-x 2 andrey andrey 4096 апр 23 03:50 Videos
+-rw-rw-r-- 1 andrey andrey  140 апр 26 14:01 all.txt
+-rwxrwxr-x 1 andrey andrey  208 апр 26 18:31 cycles.sh
+-rw-rw-r-- 1 andrey andrey    0 апр 26 14:01 err.txt
+-rw-rw-r-- 1 andrey andrey    8 июл 19 14:26 example.txt
+-rw-rw-r-- 1 andrey andrey  435 июл 10 16:46 example1.c
+-rwxrwxr-x 1 andrey andrey 9096 июл 10 16:47 example1.sh
+-rw-rw-r-- 1 andrey andrey  535 июл 10 17:08 example2.c
+-rwxrwxr-x 1 andrey andrey 9096 июл 10 17:09 example2.sh
+-rw-rw-r-- 1 andrey andrey  886 июл 10 17:27 example3.c
+-rwxrwxr-x 1 andrey andrey 9368 июл 10 17:27 example3.sh
+drwxrwxr-x 2 andrey andrey 4096 июл 11 18:13 ls
+-rw-rw-r-- 1 andrey andrey   83 апр 26 13:58 ls_txt
+drwxrwxr-x 3 andrey docker 4096 апр 26 23:38 lws
+-rw-rw-r-- 1 andrey andrey 1150 июл 19 18:33 my.cnf
+drwxrwxr-x 7 lxd       999 4096 июл 19 17:25 ourdb
+-rw-rw-r-- 1 andrey andrey  104 апр 26 13:59 sdt.txt
+drwx------ 6 andrey andrey 4096 июл 12 14:44 snap
+-rwxrwxr-x 1 andrey andrey  332 апр 26 18:20 testsc
+andrey@utm-vm:~$ vim my.cnf 
+andrey@utm-vm:~$ cat my.cnf 
+# The MariaDB configuration file
+#
+# The MariaDB/MySQL tools read configuration files in the following order:
+# 0. "/etc/mysql/my.cnf" symlinks to this file, reason why all the rest is read.
+# 1. "/etc/mysql/mariadb.cnf" (this file) to set global defaults,
+# 2. "/etc/mysql/conf.d/*.cnf" to set global options.
+# 3. "/etc/mysql/mariadb.conf.d/*.cnf" to set MariaDB-only options.
+# 4. "~/.my.cnf" to set user-specific options.
+#
+# If the same option is defined multiple times, the last one will apply.
+#
+# One can use all long options that the program supports.
+# Run program with --help to get a list of available options and with
+# --print-defaults to see which it would actually understand and use.
+#
+# If you are new to MariaDB, check out https://mariadb.com/kb/en/basic-mariadb-articles/
+
+#
+# This group is read both by the client and the server
+# use it for options that affect everything
+#
+[client-server]
+# Port or socket location where to connect
+# port = 3306
+socket = /run/mysqld/mysqld.sock
+
+# Import all .cnf files from configuration directory
+
+# My configuration file
+
+!includedir /etc/mysql/mariadb.conf.d/
+!includedir /etc/mysql/conf.d/
+
+andrey@utm-vm:~$ vim Dockerfile
+andrey@utm-vm:~$ cat Dockerfile 
+FROM mariadb:10.10.2
+COPY my.cnf /
+
+andrey@utm-vm:~$ docker build -t mymariadb .
+[+] Building 0.1s (7/7) FINISHED                                                                                                                             docker:default
+ => [internal] load build definition from Dockerfile                                                                                                                   0.0s
+ => => transferring dockerfile: 72B                                                                                                                                    0.0s
+ => [internal] load .dockerignore                                                                                                                                      0.0s
+ => => transferring context: 2B                                                                                                                                        0.0s
+ => [internal] load metadata for docker.io/library/mariadb:10.10.2                                                                                                     0.0s
+ => [internal] load build context                                                                                                                                      0.0s
+ => => transferring context: 1.19kB                                                                                                                                    0.0s
+ => [1/2] FROM docker.io/library/mariadb:10.10.2                                                                                                                       0.0s
+ => [2/2] COPY my.cnf /                                                                                                                                                0.0s
+ => exporting to image                                                                                                                                                 0.0s
+ => => exporting layers                                                                                                                                                0.0s
+ => => writing image sha256:ac917f3ec26c3bfbb73b2323a9a19dd1af9e74d61451aef44fd8a1b6fc5d12c8                                                                           0.0s
+ => => naming to docker.io/library/mymariadb                                                                                                                           0.0s
+andrey@utm-vm:~$ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
+mymariadb    latest    ac917f3ec26c   18 minutes ago   393MB
+mysleep20    latest    1604e3d0b615   8 hours ago      84.3MB
+mycowsay     latest    082a3b791d26   8 hours ago      134MB
+mynginx-1    latest    aca8f1a67e8c   8 hours ago      183MB
+phpmyadmin   latest    bb44624289de   8 days ago       572MB
+postgres     latest    0344b98f56a6   2 weeks ago      433MB
+adminer      latest    83f19ad225b2   2 weeks ago      243MB
+ubuntu       22.10     0df7a4dffcd0   3 weeks ago      84.3MB
+mariadb      10.10.2   a252ec6f0e4a   5 months ago     393MB
+andrey@utm-vm:~$ docker run --name mymariadb -e MARIADB_ROOT_PASSWORD=test123 -d mymariadb
+0165e2a688f0bd08729d70747a694fcf9efe42f3c9e21b1e82958e029a5a7f6d
+andrey@utm-vm:~$ docker ps
+CONTAINER ID   IMAGE       COMMAND                  CREATED         STATUS         PORTS      NAMES
+0165e2a688f0   mymariadb   "docker-entrypoint.s…"   4 seconds ago   Up 4 seconds   3306/tcp   mymariadb
+andrey@utm-vm:~$ docker run --name myphpadmin-mymariadb -d --link mymariadb:db -p 8083:80 phpmyadmin
+58e07ecced561841563a9f509547853d745cea27623c45069f3423ece50b1df5
+andrey@utm-vm:~$ docker ps
+CONTAINER ID   IMAGE        COMMAND                  CREATED          STATUS          PORTS                                   NAMES
+58e07ecced56   phpmyadmin   "/docker-entrypoint.…"   8 minutes ago    Up 8 minutes    0.0.0.0:8083->80/tcp, :::8083->80/tcp   myphpadmin-mymariadb
+0165e2a688f0   mymariadb    "docker-entrypoint.s…"   11 minutes ago   Up 11 minutes   3306/tcp                                mymariadb
+andrey@utm-vm:~$ docker exec -it mymariadb bash
+root@0165e2a688f0:/# ls -l
+total 60
+lrwxrwxrwx   1 root root    7 Jan 26 02:08 bin -> usr/bin
+drwxr-xr-x   2 root root 4096 Apr 18  2022 boot
+drwxr-xr-x   5 root root  340 Jul 19 19:57 dev
+drwxr-xr-x   2 root root 4096 Jan 31 18:59 docker-entrypoint-initdb.d
+drwxr-xr-x   1 root root 4096 Jul 19 19:57 etc
+drwxr-xr-x   2 root root 4096 Apr 18  2022 home
+lrwxrwxrwx   1 root root    7 Jan 26 02:08 lib -> usr/lib
+drwxr-xr-x   2 root root 4096 Jan 26 02:09 media
+drwxr-xr-x   2 root root 4096 Jan 26 02:09 mnt
+-rw-rw-r--   1 root root 1152 Jul 19 19:14 my.cnf
+drwxr-xr-x   2 root root 4096 Jan 26 02:09 opt
+dr-xr-xr-x 294 root root    0 Jul 19 19:57 proc
+drwx------   1 root root 4096 Jan 31 18:59 root
+drwxr-xr-x   1 root root 4096 Jan 31 19:00 run
+lrwxrwxrwx   1 root root    8 Jan 26 02:08 sbin -> usr/sbin
+drwxr-xr-x   2 root root 4096 Jan 26 02:09 srv
+dr-xr-xr-x  13 root root    0 Jul 19 19:57 sys
+drwxrwxrwt   1 root root 4096 Jul 19 20:06 tmp
+drwxr-xr-x   1 root root 4096 Jan 26 02:09 usr
+drwxr-xr-x   1 root root 4096 Jan 26 02:34 var
+
+root@0165e2a688f0:/# cat my.cnf 
+# The MariaDB configuration file
+#
+# The MariaDB/MySQL tools read configuration files in the following order:
+# 0. "/etc/mysql/my.cnf" symlinks to this file, reason why all the rest is read.
+# 1. "/etc/mysql/mariadb.cnf" (this file) to set global defaults,
+# 2. "/etc/mysql/conf.d/*.cnf" to set global options.
+# 3. "/etc/mysql/mariadb.conf.d/*.cnf" to set MariaDB-only options.
+# 4. "~/.my.cnf" to set user-specific options.
+#
+# If the same option is defined multiple times, the last one will apply.
+#
+# One can use all long options that the program supports.
+# Run program with --help to get a list of available options and with
+# --print-defaults to see which it would actually understand and use.
+#
+# If you are new to MariaDB, check out https://mariadb.com/kb/en/basic-mariadb-articles/
+
+#
+# This group is read both by the client and the server
+# use it for options that affect everything
+#
+[client-server]
+# Port or socket location where to connect
+# port = 3306
+socket = /run/mysqld/mysqld.sock
+
+# Import all .cnf files from configuration directory
+
+# My configuration file
+
+!includedir /etc/mysql/mariadb.conf.d/
+!includedir /etc/mysql/conf.d/
+
+root@0165e2a688f0:/# mariadb -u root -p
+Enter password: 
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 78
+Server version: 10.10.2-MariaDB-1:10.10.2+maria~ubu2204 mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| TestBase           |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.002 sec)
+
+MariaDB [(none)]> exit
+Bye
+root@0165e2a688f0:/# exit
+exit
+andrey@utm-vm:~$ 
+
+// "/Containerization/Screenshot for HW_4_ts1,2,3.png" - добавил через ГИ датабазу TestBase
+
